@@ -66,21 +66,15 @@ spec:
             - name: JMX_PROMETHEUS
               value: "{{ .Values.metrics.enabled }}"
             - name: DB_DRIVER
-              value: "{{ .Values.database.driver }}"
+              value: "org.postgresql.Driver"
             - name: DB_URL
-              value: "{{ .Values.database.url }}"
-            {{- if .Values.database.credentialsSecretEnabled }}
+              value: "jdbc:postgresql://bitnami-postgresql.default.svc.cluster.local:5432/postgres"
+            
             - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.database.credentialsSecretName | default $fullName }}
-                  key: {{ .Values.database.credentialsSecretKeys.username }}
+              value: "postgres"
             - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.database.credentialsSecretName | default $fullName }}
-                  key: {{ .Values.database.credentialsSecretKeys.password }}
-            {{- end }}
+              value: ""
+            
           {{- if .Values.extraEnvs }}
           {{- with tpl (toYaml .Values.extraEnvs) . }}
             {{ . | nindent 12 }}
